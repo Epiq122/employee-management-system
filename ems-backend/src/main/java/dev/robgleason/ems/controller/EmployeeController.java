@@ -8,6 +8,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 
 @AllArgsConstructor
 @RestController
@@ -30,6 +32,14 @@ public class EmployeeController {
         EmployeeDto employeeByIdDto = employeeService.getEmployeeById(employeeId);
         return ResponseEntity.ok(employeeByIdDto);
 
+    }
+
+    // Get All Employees
+
+    @GetMapping
+    public ResponseEntity<List<EmployeeDto>> getAllEmployees() {
+        List<EmployeeDto> allEmployees = employeeService.getAllEmployees();
+        return ResponseEntity.ok(allEmployees);
     }
 
 
