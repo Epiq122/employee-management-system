@@ -1,12 +1,12 @@
 import "./App.css";
+import ListEmployeeComponent from "./components/ListEmployeeComponent.jsx";
 
 function App() {
     return (
         <div>
-            <h1 className={"text-center"}>Hey</h1>
+            <ListEmployeeComponent/>
         </div>
     );
-    8
 }
 
 export default App;
