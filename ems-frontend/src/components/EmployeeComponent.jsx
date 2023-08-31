@@ -1,18 +1,25 @@
 import {useState} from "react";
+import {createEmployee} from "../services/EmployeeService.js";
+import {useNavigate} from "react-router-dom";
 
 const EmployeeComponent = () => {
     const [firstName, setFirstName] = useState("");
     const [lastName, setLastName] = useState("");
     const [email, setEmail] = useState("");
 
-    const handleFirstName = e => setFirstName(e.target.value);
-    const handleLastName = e => setLastName(e.target.value);
-    const handleEmail = e => setEmail(e.target.value);
+    const navigator = useNavigate();
+    const handleFirstName = (e) => setFirstName(e.target.value);
+    const handleLastName = (e) => setLastName(e.target.value);
+    const handleEmail = (e) => setEmail(e.target.value);
 
     function handleSubmit(e) {
         e.preventDefault();
         const employee = {firstName, lastName, email};
-        console.log(employee);
+
+        createEmployee(employee).then((response) => {
+            console.log(response.data);
+            navigator('/employees')
+        });
     }
 
     return (
