@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { createEmployee } from "../services/EmployeeService.js";
+import { useEffect, useState } from "react";
+import { createEmployee, getEmployee } from "../services/EmployeeService.js";
 import { useNavigate, useParams } from "react-router-dom";
 
 const EmployeeComponent = () => {
@@ -18,6 +18,20 @@ const EmployeeComponent = () => {
     lastName: "",
     email: "",
   });
+
+  useEffect(() => {
+    if (id) {
+      getEmployee(id)
+        .then((response) => {
+          setFirstName(response.data.firstName);
+          setLastName(response.data.lastName);
+          setEmail(response.data.email);
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+    }
+  }, [id]);
 
   function handleSubmit(e) {
     e.preventDefault();
