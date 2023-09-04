@@ -3,6 +3,7 @@ package dev.robgleason.ems.service;
 
 import dev.robgleason.ems.dto.DepartmentDto;
 import dev.robgleason.ems.entity.Department;
+import dev.robgleason.ems.exceptions.ResourceNotFoundException;
 import dev.robgleason.ems.mapper.AutoDepartmentMapper;
 import dev.robgleason.ems.repository.DepartmentRepository;
 import lombok.AllArgsConstructor;
@@ -48,5 +49,13 @@ public class DepartmentServiceImpl implements DepartmentService {
         existingDepartment.setDepartmentDescription(department.getDepartmentDescription());
         Department updatedDepartment = departmentRepository.save(existingDepartment);
         return AutoDepartmentMapper.MAPPER.mapToDepartmentDto(updatedDepartment);
+    }
+
+    @Override
+    public void deleteDepartment(Long departmentId) {
+        Department department = departmentRepository.findById(departmentId)
+                .orElseThrow(() ->
+                        new ResourceNotFoundException("Department does not exist with id:  " + departmentId));
+       departmentRepository.deleteById(departmentId);
     }
 }
