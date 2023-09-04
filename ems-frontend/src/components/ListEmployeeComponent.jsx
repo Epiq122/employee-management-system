@@ -1,7 +1,6 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { deleteEmployee, listEmployees } from "../services/EmployeeService.js";
 import { useNavigate } from "react-router-dom";
-import EmployeeComponent from "./EmployeeComponent.jsx";
 
 const ListEmployeeComponent = () => {
   const [employees, setEmployees] = useState([]);
