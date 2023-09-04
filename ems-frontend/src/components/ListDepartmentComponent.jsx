@@ -1,20 +1,19 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { listDepartments } from "../services/DepartmentService.js";
 
 const ListDepartmentComponent = () => {
-  let dummyData = [
-    {
-      id: 1,
-      departmentName: "IT",
-      departmentDescription: "Information Technology",
-    },
-    {
-      id: 2,
-      departmentName: "JAN",
-      departmentDescription: "Janitorial",
-    },
-  ];
+  const [departments, setDepartments] = useState([]);
 
-  const [departments, setDepartments] = useState(dummyData);
+  useEffect(() => {
+    listDepartments()
+      .then((response) => {
+        console.log(response.data);
+        setDepartments(response.data);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  }, []);
 
   return (
     <div>
