@@ -1,4 +1,18 @@
 package dev.robgleason.ems.mapper;
 
-public class AutoMapper {
+
+import dev.robgleason.ems.dto.EmployeeDto;
+import dev.robgleason.ems.entity.Employee;
+import org.mapstruct.Mapper;
+import org.mapstruct.factory.Mappers;
+
+@Mapper
+public interface AutoEmployeeMapper {
+
+    AutoEmployeeMapper MAPPER = Mappers.getMapper(AutoEmployeeMapper.class);
+
+    EmployeeDto maptToEmployeeDto(Employee employee);
+
+    Employee mapToEmployee(EmployeeDto employeeDto);
+
 }
