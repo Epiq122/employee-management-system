@@ -36,6 +36,14 @@ public class DepartmentController {
         return ResponseEntity.ok(allDepartments);
     }
 
+    @PutMapping("{id}")
+    public ResponseEntity<DepartmentDto>updatedDepartment(@PathVariable("id") Long departmentId,@RequestBody DepartmentDto department){
+       department.setId(departmentId);
+        DepartmentDto updatedDepartment = departmentService.updateDepartment(department);
+
+        return ResponseEntity.ok(updatedDepartment);
+    }
+
 
 
 

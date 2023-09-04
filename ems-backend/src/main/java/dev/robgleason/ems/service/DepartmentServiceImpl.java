@@ -40,4 +40,13 @@ public class DepartmentServiceImpl implements DepartmentService {
         return departments.stream().map(AutoDepartmentMapper.MAPPER::mapToDepartmentDto).collect(Collectors.toList());
 
     }
+
+    @Override
+    public DepartmentDto updateDepartment(DepartmentDto department) {
+        Department existingDepartment =departmentRepository.findById(department.getId()).get();
+        existingDepartment.setDepartmentName(department.getDepartmentName());
+        existingDepartment.setDepartmentDescription(department.getDepartmentDescription());
+        Department updatedDepartment = departmentRepository.save(existingDepartment);
+        return AutoDepartmentMapper.MAPPER.mapToDepartmentDto(updatedDepartment);
+    }
 }
