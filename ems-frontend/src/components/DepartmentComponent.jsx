@@ -9,6 +9,11 @@ const DepartmentComponent = () => {
   const [departmentName, setDepartmentName] = useState("");
   const [departmentDescription, setDepartmentDescription] = useState("");
   const { id } = useParams();
+
+  const [errors, setErrors] = useState({
+    departmentName: "",
+    departmentDescription: "",
+  });
   const navigator = useNavigate();
 
   useEffect(() => {
@@ -23,6 +28,26 @@ const DepartmentComponent = () => {
         });
     }
   }, [id]);
+
+  function validateForm() {
+    let valid = true;
+    const errorsCopy = { ...errors };
+
+    if (departmentName.trim()) {
+      errorsCopy.departmentName = "";
+    } else {
+      errorsCopy.departmentName = "Department name is required";
+      valid = false;
+    }
+    if (departmentDescription.trim()) {
+      errorsCopy.departmentDescription = "";
+    } else {
+      errorsCopy.departmentDescription = "Department description is required";
+      valid = false;
+    }
+    setErrors(errorsCopy);
+    return valid;
+  }
 
   function saveDepartment(e) {
     e.preventDefault();
@@ -60,24 +85,38 @@ const DepartmentComponent = () => {
               <div className="form-group mb-2">
                 <label className="form-label">Department Name: </label>
                 <input
-                  className="form-control"
+                  className={`form-control ${
+                    errors.departmentName ? "is-valid" : ""
+                  }`}
+                  onChange={(e) => setDepartmentName(e.target.value)}
                   type="text"
                   name="departmentName"
                   placeholder="Enter Department Name"
                   value={departmentName}
-                  onChange={(e) => setDepartmentName(e.target.value)}
                 />
+                {errors.departmentName && (
+                  <div className="invalid-feedback">
+                    {errors.departmentName}
+                  </div>
+                )}
               </div>
               <div className="form-group mb-2">
                 <label className="form-label">Department Description: </label>
                 <input
-                  className="form-control"
+                  className={`form-control ${
+                    errors.departmentDescription ? "is-valid" : ""
+                  }`}
+                  onChange={(e) => setDepartmentDescription(e.target.value)}
                   type="text"
                   name="departmentDescription"
                   placeholder="Enter Department Description"
                   value={departmentDescription}
-                  onChange={(e) => setDepartmentDescription(e.target.value)}
                 />
+                {errors.departmentDescription && (
+                  <div className="invalid-feedback">
+                    {errors.departmentDescription}
+                  </div>
+                )}
               </div>
               <button className="btn btn-success" onClick={saveDepartment}>
                 Submit

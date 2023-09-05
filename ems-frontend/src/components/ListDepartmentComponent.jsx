@@ -29,7 +29,7 @@ const ListDepartmentComponent = () => {
       <table className="table table-striped table-bordered">
         <thead>
           <tr>
-            <th>Department Dd</th>
+            <th>Department Id</th>
             <th>Department Name</th>
             <th>Department Description</th>
             <th>Actions</th>
