@@ -56,8 +56,7 @@ const DepartmentComponent = () => {
       const department = { departmentName, departmentDescription };
       if (id) {
         updateDepartment(id, department)
-          .then((response) => {
-            console.log(response.data);
+          .then(() => {
             navigator("/departments");
           })
           .catch((error) => {
@@ -65,8 +64,7 @@ const DepartmentComponent = () => {
           });
       } else {
         createDepartment(department)
-          .then((response) => {
-            console.log(response.data);
+          .then(() => {
             navigator("/departments");
           })
           .catch((error) => {

@@ -11,7 +11,7 @@ public interface AutoEmployeeMapper {
 
     AutoEmployeeMapper MAPPER = Mappers.getMapper(AutoEmployeeMapper.class);
 
-    EmployeeDto maptToEmployeeDto(Employee employee);
+    EmployeeDto mapToEmployeeDto(Employee employee);
 
     Employee mapToEmployee(EmployeeDto employeeDto);
 
