@@ -3,6 +3,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import {
   createDepartment,
   getDepartment,
+  updateDepartment,
 } from "../services/DepartmentService.js";
 
 const DepartmentComponent = () => {
@@ -49,20 +50,30 @@ const DepartmentComponent = () => {
     return valid;
   }
 
-  function saveDepartment(e) {
+  function saveOrUpdateDepartment(e) {
     e.preventDefault();
-
-    const department = { departmentName, departmentDescription };
-    console.log(department);
-
-    createDepartment(department)
-      .then((response) => {
-        console.log(response.data);
-        navigator("/departments");
-      })
-      .catch((error) => {
-        console.error(error);
-      });
+    if (validateForm()) {
+      const department = { departmentName, departmentDescription };
+      if (id) {
+        updateDepartment(id, department)
+          .then((response) => {
+            console.log(response.data);
+            navigator("/departments");
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+      } else {
+        createDepartment(department)
+          .then((response) => {
+            console.log(response.data);
+            navigator("/departments");
+          })
+          .catch((error) => {
+            console.error(error);
+          });
+      }
+    }
   }
 
   function pageTitle() {
@@ -86,7 +97,7 @@ const DepartmentComponent = () => {
                 <label className="form-label">Department Name: </label>
                 <input
                   className={`form-control ${
-                    errors.departmentName ? "is-valid" : ""
+                    errors.departmentName ? "is-invalid" : ""
                   }`}
                   onChange={(e) => setDepartmentName(e.target.value)}
                   type="text"
@@ -104,7 +115,7 @@ const DepartmentComponent = () => {
                 <label className="form-label">Department Description: </label>
                 <input
                   className={`form-control ${
-                    errors.departmentDescription ? "is-valid" : ""
+                    errors.departmentDescription ? "is-invalid" : ""
                   }`}
                   onChange={(e) => setDepartmentDescription(e.target.value)}
                   type="text"
@@ -118,7 +129,10 @@ const DepartmentComponent = () => {
                   </div>
                 )}
               </div>
-              <button className="btn btn-success" onClick={saveDepartment}>
+              <button
+                className="btn btn-success"
+                onClick={saveOrUpdateDepartment}
+              >
                 Submit
               </button>
             </form>
