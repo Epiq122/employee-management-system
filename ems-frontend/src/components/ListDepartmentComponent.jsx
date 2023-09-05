@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import {
   deleteDepartment,
-  listDepartments,
+  getAllDepartments,
 } from "../services/DepartmentService.js";
 import { Link, useNavigate } from "react-router-dom";
 
@@ -10,11 +10,11 @@ const ListDepartmentComponent = () => {
   const navigator = useNavigate();
 
   useEffect(() => {
-    getAllDepartments();
+    listOfDepartments();
   }, []);
 
-  function getAllDepartments() {
-    listDepartments()
+  function listOfDepartments() {
+    getAllDepartments()
       .then((response) => {
         console.log(response.data);
         setDepartments(response.data);
@@ -30,8 +30,9 @@ const ListDepartmentComponent = () => {
 
   function removeDepartment(id) {
     deleteDepartment(id)
-      .then(() => {
-        getAllDepartments();
+      .then((response) => {
+        console.log(response.data);
+        listOfDepartments();
       })
       .catch((error) => {
         console.error(error);
