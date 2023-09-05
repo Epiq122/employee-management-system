@@ -1,9 +1,11 @@
 package dev.robgleason.ems.service;
 
 import dev.robgleason.ems.dto.EmployeeDto;
+import dev.robgleason.ems.entity.Department;
 import dev.robgleason.ems.entity.Employee;
 import dev.robgleason.ems.exceptions.ResourceNotFoundException;
 import dev.robgleason.ems.mapper.AutoEmployeeMapper;
+import dev.robgleason.ems.repository.DepartmentRepository;
 import dev.robgleason.ems.repository.EmployeeRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -17,24 +19,36 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 public class EmployeeServiceImpl implements EmployeeService {
 
+
     private EmployeeRepository employeeRepository;
+    private DepartmentRepository departmentRepository;
 
     @Override
     public EmployeeDto createEmployee(EmployeeDto employeeDto) {
+        Employee employee = AutoEmployeeMapper.MAPPER.mapToEmployee(employeeDto);
 
-    Employee employee = AutoEmployeeMapper.MAPPER.mapToEmployee(employeeDto);
-    Employee savedEmployee = employeeRepository.save(employee);
+        Department department = departmentRepository.findById(employeeDto.getDepartmentId())
+                .orElseThrow(() ->
+                        new ResourceNotFoundException("Department is not exists with id: " + employeeDto.getDepartmentId()));
 
-    return AutoEmployeeMapper.MAPPER.maptToEmployeeDto(savedEmployee);
+        employee.setDepartment(department);
+
+        Employee savedEmployee = employeeRepository.save(employee);
+        return AutoEmployeeMapper.MAPPER.mapToEmployeeDto(savedEmployee);
     }
 
-    @Override
-    public EmployeeDto getEmployeeById(Long employeeId) {
-        Optional<Employee> optionalEmployee = employeeRepository.findById(employeeId);
-        Employee employee = optionalEmployee.get();
-        return AutoEmployeeMapper.MAPPER.maptToEmployeeDto(optionalEmployee.get());
-    }
-
+//    @Override
+//    public EmployeeDto getEmployeeById(Long employeeId) {
+//        Optional<Employee> optionalEmployee = employeeRepository.findById(employeeId);
+//        Employee employee = optionalEmployee.get();
+//        return AutoEmployeeMapper.MAPPER.maptToEmployeeDto(optionalEmployee.get());
+//    }
+@Override
+public EmployeeDto getEmployeeById(Long employeeId) {
+    Optional<Employee> optionalEmployee = employeeRepository.findById(employeeId);
+    Employee employee = optionalEmployee.orElseThrow(() -> new ResourceNotFoundException("Employee not found with id " + employeeId));
+    return AutoEmployeeMapper.MAPPER.mapToEmployeeDto(employee);
+}
 
     @Override
     public List<EmployeeDto> getAllEmployees() {
@@ -44,16 +58,35 @@ public class EmployeeServiceImpl implements EmployeeService {
 
 
 
+//    @Override
+//    public EmployeeDto updateEmployee(EmployeeDto employee) {
+//        Employee existingEmployee = employeeRepository.findById(employee.getId()).get();
+//        existingEmployee.setFirstName(employee.getFirstName());
+//        existingEmployee.setLastName(employee.getLastName());
+//        existingEmployee.setEmail(employee.getEmail());
+//        Employee updatedEmployee  = employeeRepository.save(existingEmployee);
+//        return AutoEmployeeMapper.MAPPER.maptToEmployeeDto(updatedEmployee);
+//
+//
+//    }
+
     @Override
     public EmployeeDto updateEmployee(EmployeeDto employee) {
-        Employee existingEmployee = employeeRepository.findById(employee.getId()).get();
+        Employee existingEmployee = employeeRepository.findById(employee.getId())
+                .orElseThrow(() -> new ResourceNotFoundException("Employee does not exist with id: " + employee.getId()));
+
         existingEmployee.setFirstName(employee.getFirstName());
         existingEmployee.setLastName(employee.getLastName());
         existingEmployee.setEmail(employee.getEmail());
-        Employee updatedEmployee  = employeeRepository.save(existingEmployee);
+
+        if (employee.getDepartmentId() != null) {
+            Department department = departmentRepository.findById(employee.getDepartmentId())
+                    .orElseThrow(() -> new ResourceNotFoundException("Department does not exist with id: " + employee.getDepartmentId()));
+            existingEmployee.setDepartment(department);
+        }
+
+        Employee updatedEmployee = employeeRepository.save(existingEmployee);
         return AutoEmployeeMapper.MAPPER.maptToEmployeeDto(updatedEmployee);
-
-
     }
 
 
