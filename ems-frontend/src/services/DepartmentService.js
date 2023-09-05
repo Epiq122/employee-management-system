@@ -12,3 +12,7 @@ export const getDepartment = (departmentId) =>
 
 export const updateDepartment = (departmentId, department) =>
   axios.put(REST_API_BASE_URL + "/" + departmentId, department);
+
+export const deleteDepartment = (departmentId) => {
+  return axios.delete(REST_API_BASE_URL + "/" + departmentId);
+};

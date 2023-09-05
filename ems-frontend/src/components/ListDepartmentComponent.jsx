@@ -1,11 +1,19 @@
 import { useEffect, useState } from "react";
-import { listDepartments } from "../services/DepartmentService.js";
+import {
+  deleteDepartment,
+  listDepartments,
+} from "../services/DepartmentService.js";
 import { Link, useNavigate } from "react-router-dom";
 
 const ListDepartmentComponent = () => {
   const [departments, setDepartments] = useState([]);
   const navigator = useNavigate();
+
   useEffect(() => {
+    getAllDepartments();
+  }, []);
+
+  function getAllDepartments() {
     listDepartments()
       .then((response) => {
         console.log(response.data);
@@ -14,10 +22,20 @@ const ListDepartmentComponent = () => {
       .catch((error) => {
         console.error(error);
       });
-  }, []);
+  }
 
   function updateDepartment(id) {
     navigator(`/edit-department/${id}`);
+  }
+
+  function removeDepartment(id) {
+    deleteDepartment(id)
+      .then(() => {
+        getAllDepartments();
+      })
+      .catch((error) => {
+        console.error(error);
+      });
   }
 
   return (
@@ -33,6 +51,7 @@ const ListDepartmentComponent = () => {
             <th>Department Name</th>
             <th>Department Description</th>
             <th>Actions</th>
+            <th>Delete</th>
           </tr>
         </thead>
         <tbody>
@@ -47,6 +66,14 @@ const ListDepartmentComponent = () => {
                   onClick={() => updateDepartment(department.id)}
                 >
                   Update
+                </button>
+              </td>
+              <td>
+                <button
+                  className="btn btn-danger"
+                  onClick={() => removeDepartment(department.id)}
+                >
+                  Delete
                 </button>
               </td>
             </tr>
