@@ -1,12 +1,28 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { createDepartment } from "../services/DepartmentService.js";
+import {
+  createDepartment,
+  getDepartment,
+} from "../services/DepartmentService.js";
 
 const DepartmentComponent = () => {
   const [departmentName, setDepartmentName] = useState("");
   const [departmentDescription, setDepartmentDescription] = useState("");
-
+  const { id } = useParams();
   const navigator = useNavigate();
+
+  useEffect(() => {
+    if (id) {
+      getDepartment(id)
+        .then((response) => {
+          setDepartmentName(response.data.departmentName);
+          setDepartmentDescription(response.data.departmentDescription);
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+    }
+  }, [id]);
 
   function saveDepartment(e) {
     e.preventDefault();
@@ -23,8 +39,6 @@ const DepartmentComponent = () => {
         console.error(error);
       });
   }
-
-  const { id } = useParams();
 
   function pageTitle() {
     if (id) {
