@@ -24,17 +24,15 @@ const DepartmentComponent = () => {
       });
   }
 
-  // const { id } = useParams();
+  const { id } = useParams();
 
-  // function pageTitle() {
-  //     if (id) {
-  //         return <h2 className="text-center">Update Employee</h2>;
-  //     } else {
-  //         return <h2 className="text-center">Add Employee</h2>;
-  //     }
-  // }
-  //
-  //
+  function pageTitle() {
+    if (id) {
+      return <h2 className="text-center">Update Department</h2>;
+    } else {
+      return <h2 className="text-center">Add Department</h2>;
+    }
+  }
 
   return (
     <div className="container">
@@ -42,7 +40,7 @@ const DepartmentComponent = () => {
       <br />
       <div className="row">
         <div className="card col-md-6 offset-md-3 ">
-          <h2 className="text-center">Add Department</h2>
+          {pageTitle()}
           <div className="card-body">
             <form action="">
               <div className="form-group mb-2">
