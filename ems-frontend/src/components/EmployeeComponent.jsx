@@ -5,22 +5,37 @@ import {
   updateEmployee,
 } from "../services/EmployeeService.js";
 import { useNavigate, useParams } from "react-router-dom";
+import { getAllDepartments } from "../services/DepartmentService.js";
 
 const EmployeeComponent = () => {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
+  const [departmentId, setDepartmentId] = useState("");
+  const [departments, setDepartments] = useState([]);
 
   const navigator = useNavigate();
-  const { id } = useParams();
+
   const handleFirstName = (e) => setFirstName(e.target.value);
   const handleLastName = (e) => setLastName(e.target.value);
   const handleEmail = (e) => setEmail(e.target.value);
 
+  useEffect(() => {
+    getAllDepartments()
+      .then((response) => {
+        setDepartments(response.data);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  }, []);
+
+  const { id } = useParams();
   const [errors, setErrors] = useState({
     firstName: "",
     lastName: "",
     email: "",
+    department: "",
   });
 
   useEffect(() => {
@@ -30,6 +45,7 @@ const EmployeeComponent = () => {
           setFirstName(response.data.firstName);
           setLastName(response.data.lastName);
           setEmail(response.data.email);
+          setDepartmentId(response.data.departmentId);
         })
         .catch((error) => {
           console.error(error);
@@ -41,7 +57,9 @@ const EmployeeComponent = () => {
     e.preventDefault();
 
     if (validateForm()) {
-      const employee = { firstName, lastName, email };
+      const employee = { firstName, lastName, email, departmentId };
+      console.log(employee);
+
       if (id) {
         updateEmployee(id, employee)
           .then((response) => {
@@ -66,6 +84,7 @@ const EmployeeComponent = () => {
 
   function validateForm() {
     let valid = true;
+
     const errorsCopy = { ...errors };
 
     if (firstName.trim()) {
@@ -74,12 +93,14 @@ const EmployeeComponent = () => {
       errorsCopy.firstName = "First name is required";
       valid = false;
     }
+
     if (lastName.trim()) {
       errorsCopy.lastName = "";
     } else {
       errorsCopy.lastName = "Last name is required";
       valid = false;
     }
+
     if (email.trim()) {
       errorsCopy.email = "";
     } else {
@@ -87,7 +108,15 @@ const EmployeeComponent = () => {
       valid = false;
     }
 
+    if (departmentId) {
+      errorsCopy.department = "";
+    } else {
+      errorsCopy.department = "Select Department";
+      valid = false;
+    }
+
     setErrors(errorsCopy);
+
     return valid;
   }
 
